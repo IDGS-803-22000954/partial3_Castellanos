@@ -1,0 +1,213 @@
+{# templates/index.html #}
+{% extends "layout.html" %}
+
+{% block title %}Pizzería - Sistema de Pedidos{% endblock %}
+
+{% block container %}
+{{ cliente_form.csrf_token }}
+  <div style="display: flex; margin: 0px 40px 0px 40px; justify-content: space-between;">
+    <style>
+      button{
+        all: unset;
+        height: 40px;
+        background-color: #99B4D1;
+        margin-top: 20px;
+        text-align: center;
+        border-radius: 7px;
+        padding: 0px 10px 0px 10px;
+        margin: 0px 10px 0px 10px;
+    }
+    button:hover{
+        background-color: brown;
+    }
+    button:active{
+        background-color: brown;
+        height: 35px;
+    }
+    </style>
+    <form action="{{url_for('usuario')}}">
+      <button type="submit">Registro de usuarios</button>
+    </form>
+    <form action="{{url_for('logout')}}">
+      <button type="submit">Cerrar sesión</button>
+    </form>
+  </div>
+<div>
+  <div>
+    <div>
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div>
+        <h3>{{ message }}</h3>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <form method="POST" id="pedidoForm">
+        
+
+        <div class="c1">
+          <div class="cliente">
+            <div>
+              {{cliente_form.nombre.label() }} 
+              {{cliente_form.nombre()}} 
+              {% if cliente_form.nombre.errors %}
+              <div>
+                {% for error in cliente_form.nombre.errors %} 
+                {{ error }}
+                {%endfor %}
+              </div>
+              {% endif %}
+            </div>
+            <div>
+              {{ cliente_form.direccion.label() }} 
+              {{ cliente_form.direccion() }} 
+              {% if cliente_form.direccion.errors %}
+              <div>
+                {% for error in cliente_form.direccion.errors %} {{ error }}
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+            <div>
+              {{ cliente_form.telefono.label() }} {{
+              cliente_form.telefono() }} {% if
+              cliente_form.telefono.errors %}
+              <div>
+                {% for error in cliente_form.telefono.errors %} {{ error }}
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="pizza">
+            <div class="ingredientes" style="border: 1px white solid;">
+              <label class="texto">{{ pizza_form.tamano.label }}</label>
+              {% for subfield in pizza_form.tamano %}
+              <div>
+                {{ subfield(class="btn-check") }} {{
+                subfield.label(class="btn btn-outline-primary") }}
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="ingredientes" style="border: 1px white solid;">
+              <label class="texto">{{ pizza_form.ingredientes.label }}</label>
+              {% for subfield in pizza_form.ingredientes %}
+              <div>
+                {{subfield()}}
+                {{subfield.label()}}
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="ingredientes">
+              <label class="texto">{{pizza_form.numPizzas.label()}}</label>
+              <div>
+                {{pizza_form.numPizzas()}}
+              </div>
+              <button type="submit" formaction="{{ url_for('index') }}">Agregar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="c1" style="display: flex; justify-content: space-between; ">
+    <div style="width: 49%; margin-right: 15px;">
+      {% if carrito %}
+      <div>
+        <table style="width: 100%; background-color: white; border: 1px solid gray;">
+          <thead>
+            <tr>
+              <th>Tamaño</th>
+              <th>Cantidad</th>
+              <th>Ingredientes</th>
+              <th>Precio</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% set total = 0 %} {% for pizza in carrito %} 
+            {% set precio_base = {'pequena': 40, 'mediana': 80, 'grande': 120}[pizza.tamano] %} 
+            {% set precio_ingredientes = pizza.ingredientes|length * 10 %} 
+            {% set subtotal_pizza = (precio_base + precio_ingredientes) * pizza.cantidad|int %} 
+            {% set total = total + subtotal_pizza %}
+            <tr>
+              <td>
+                {% if pizza.tamano == 'pequena' %}
+                <span>Pequeña</span>
+                {% elif pizza.tamano == 'mediana' %}
+                <span>Mediana</span>
+                {% else %}
+                <span>Grande</span>
+                {% endif %}
+              </td>
+              <td>{{ pizza.cantidad }}</td>
+              <td>
+                {% if pizza.ingredientes %} {% for ingrediente in
+                pizza.ingredientes %}
+                <span>{{ ingrediente }}</span>
+                {% endfor %} {% else %}
+                <em>Sin ingredientes</em>
+                {% endif %}
+              </td>
+              <td>${{ subtotal_pizza }}</td>
+              <td>
+                <form method="POST" action="{{ url_for('eliminar_pizza', indice=loop.index0) }}"
+                  style="display: inline">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                  <button type="submit" title="Eliminar pizza">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div>No hay pizzas en tu orden</div>
+      {% endif %}
+      <div style="display: flex; justify-content: space-between; padding: 50px;">
+        {% if carrito %}
+        <form method="POST" action="{{ url_for('eliminar_carrito') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button type="submit">Quitar</button>
+        </form>
+        {% endif %}
+        {% if carrito %}
+        <form method="POST" action="{{ url_for('finalizarPedido') }}" id="formFinalizar">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button type="submit">Terminar</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ventas">
+      <div class="v2">
+        <p class="texto2">Ventas del dia</p>
+        <div>
+          {% if ventas_hoy %}
+          <div style="display: flex; justify-content: center; font-weight: bold; font-size: 20px; margin-top: 10px;" >
+            {% for venta in ventas_hoy %}
+            {{ venta.nombre_cliente }} total {{ venta.total_venta }}
+            <br>
+            {% endfor %}
+          </div>
+          <div style="display: flex; justify-content: center; font-weight: bold; font-size: 20px; margin-top: 10px;">
+            Ventas totales de dia: {{suma_total}}
+          </div>
+          {% else %}
+          <div style="display: flex; justify-content: center; font-weight: bold; font-size: 20px; margin-top: 10px;">No hay ventas registradas hoy</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+{% endblock %}

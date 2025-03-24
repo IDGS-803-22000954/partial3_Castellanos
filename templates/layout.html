@@ -1,0 +1,21 @@
+{# templates/layout.html #}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+    <link rel="stylesheet" href="../static/css/style.css">
+  </head>
+  <body>
+    <main>
+      <nav style="height: 50px; background-color: brown; margin: 10px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+          <img src="../static/img/eff4df42e763ab46146e1dc590b386f6-icono-de-pizza-entera.webp" alt="" height="50px" width="50px">
+      </nav>
+      {% block container %}
+      
+      {% endblock %}
+    </main>
+  </body>
+</html>

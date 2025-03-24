@@ -1,0 +1,63 @@
+.c1{
+    background-color: #99B4D1;
+    border: 2px black dashed;
+    padding: 30px;
+    margin: 10px 40px 40px 40px;
+}
+
+.cliente{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 40px;
+}
+
+.pizza{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.ingredientes{
+    position: relative;
+    padding: 15px 70px 15px 15px;
+    width: 170px;    
+}
+
+.texto{
+    position: absolute;
+    top: -10px;
+    left: 25%;
+    transform: translateX(-50%);
+    background-color: #99B4D1;
+    padding: 0 10px;
+}
+
+.texto2{
+    position: absolute;
+    top: -20px;
+    left: 12%;
+    transform: translateX(-50%);
+    background-color: #ABABAB;
+    padding: 0 10px;
+}
+
+tr{
+    border: 1px solid gray; 
+    text-align: center;
+}
+
+.ventas{
+    margin-left: 15px;
+    background-color: #ABABAB; 
+    border: 1px dashed black; 
+    width: 49%;
+    padding: 15px;
+}
+
+.v2{
+    border: 1px solid white;
+    position: relative;
+}

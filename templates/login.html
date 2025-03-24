@@ -1,0 +1,57 @@
+{# templates/login.html #}
+{% extends "layout.html" %}
+
+{% block title %}Pizzería - Inicio de Sesión{% endblock %}
+
+{% block container %}
+<style>
+    div{
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+    h1{
+        justify-self: center;
+    }
+    form{
+        justify-self: center;
+    }
+    button{
+        all: unset;
+        height: 40px;
+        width: 80px;
+        background-color: #99B4D1;
+        margin-top: 20px;
+        text-align: center;
+        border-radius: 7px;
+        position: absolute;
+    }
+    button:hover{
+        background-color: brown;
+    }
+    button:active{
+        background-color: brown;
+        height: 35px;
+        width: 65px;   
+    }
+    
+</style>
+
+    <div>
+        <h1>Inicio de sesion</h1>
+        <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="input">
+                <label for="user">Usuario</label>
+                <input type="text" name="user" id="user">
+            </div>
+            <div class="input">
+                <label for="contrasenia">Contraseña</label>
+                <input type="password" name="contrasenia" id="contrasenia">
+            </div>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+{% endblock %}
